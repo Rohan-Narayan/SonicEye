@@ -10,8 +10,9 @@
    Right Middle: 3
    Right Sensor: 4
 */
-int trigPin[ ] = {12, 10, 8, 6, 4}; // Trigger
-int echoPin[ ] = {13, 11, 9, 7, 5}; // Echo
+// Sensor Ports
+int trigPin[ ] = {12, 10, 8, 6, 4};
+int echoPin[ ] = {13, 11, 9, 7, 5}; 
 int speakerPinLeft = {2};
 int speakerPinRight = {3};
 long duration[ ] = {0, 0, 0, 0, 0};
@@ -32,7 +33,7 @@ void setup() {
     pinMode(echoPin[i], INPUT);
   }
 }
-
+// main method
 void loop() {
   storeDistance();
   distanceAnalysis();
@@ -42,15 +43,16 @@ void loop() {
   delay(150);
 }
 
+// method to store distances recorded by ultrasonic sensors
 void storeDistance() {
   for (byte i = 0; i < 5; i = i + 1) {
-    //Sending Signal
+    // Sending ultrasonic wave
     digitalWrite(trigPin[i], LOW);
     delayMicroseconds(5);
     digitalWrite(trigPin[i], HIGH);
     delayMicroseconds(10);
     digitalWrite(trigPin[i], LOW);
-    //Receiving Signal
+    // Receiving ultrasonic wave
     pinMode(echoPin[i], INPUT);
     //Storing as duration and distance output
     duration[i] = pulseIn(echoPin[i], HIGH);
@@ -66,6 +68,7 @@ void storeDistance() {
   }
 }
 
+// Determine which sensor is detecting closest object and how close that object is
 void distanceAnalysis() {
   minimum = distance[0];
   index = 0;
@@ -79,9 +82,11 @@ void distanceAnalysis() {
   if (minimum == 2000)
     index = -1;
   
-  frequency = 4000*(1/(1 + exp(0.02*(minimum - 120)))); // sigmoid function mapping
+   // Sigmoid function mapping of frequency
+  frequency = 4000*(1/(1 + exp(0.02*(minimum - 120)))); 
 }
 
+// Play sound on speaker to indicate to wearer how close object is
 void playSound(int freq, int ind) {
   if (freq >= 40) {
     switch(ind) {
